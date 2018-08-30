@@ -1,0 +1,50 @@
+---
+- hosts: all
+  tasks:
+    
+    - name: Install common need
+      yum: pkg={{item}} state=installed
+      with_items:
+          - wget
+          - git
+          - zip 
+      become: true
+
+    - name: Get JAVA
+      raw: wget -nc --no-cookies --no-check-certificate --header "Cookie:gpw_e24=http:%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.rpm"
+      become: true
+
+    - name: Install JAVA
+      raw: rpm -ivh jdk-8u181-linux-x64.rpm --replacepkgs
+      become: true
+   
+    - name: Import gpg key for elasticsearch
+      raw: rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+      become: true
+
+    - name: Get elasticsearch 6.2.4
+      raw: wget -nc https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.4.rpm
+      become: true
+    
+    - name: Install elasticsearch 6.2.4
+      raw: rpm -ivh elasticsearch-6.2.4.rpm --replacepkgs
+      become: true
+
+    - name: Copy template elasticsearch.yml 
+      template:
+        src: templates/elasticsearch.yml
+        dest: /etc/elasticsearch/elasticsearch.yml
+        mode: 0644  
+      become: true
+
+    - name: Uncomment MAX_LOCKED_MEMORY=unlimited
+      command: sed -i 's/#MAX_LOCKED_MEMORY=unlimited/MAX_LOCKED_MEMORY=unlimited/g' /etc/sysconfig/elasticsearch
+      become: true 
+
+    - name: Enable elasticsearch.service
+      raw: systemctl enable elasticsearch.service
+      become: true  
+
+    - name: start elasticsearch.service
+      raw: systemctl start elasticsearch.service
+      become: true    

@@ -1,0 +1,24 @@
+---
+- hosts: all
+  tasks:
+    
+    - name: Get kibana 6.2.4
+      raw: wget -nc https://artifacts.elastic.co/downloads/kibana/kibana-6.2.4-x86_64.rpm
+      ignore_errors: true
+      become: true
+    
+    - name: Install kibana 6.2.4
+      raw: rpm -ivh kibana-6.2.4-x86_64.rpm --replacepkgs
+      become: true
+
+    - name: Get systemctl daemon-reload
+      raw: /bin/systemctl daemon-reload
+      become: true
+
+    - name: enable kibana.service 
+      raw: /bin/systemctl enable kibana.service
+      become: true
+    
+    - name: enable kibana.service 
+      raw: /bin/systemctl start kibana.service
+      become: true

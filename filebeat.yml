@@ -1,0 +1,12 @@
+---
+- hosts: all
+  tasks:
+
+  - name: Get filebeat
+    raw: curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.3.2-x86_64.rpm
+    become: true
+  
+  - name: Install filebeat
+    raw: rpm -vi filebeat-6.3.2-x86_64.rpm
+    become: true
+

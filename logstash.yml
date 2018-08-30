@@ -1,0 +1,35 @@
+---
+- hosts: all
+  tasks:
+
+    - name: Copy logstash repo
+      copy:
+        src: files/logstash.repo 
+        dest: /etc/yum.repos.d/ 
+        mode: 0644
+      become: true
+
+    - name: Uninstall logstash
+      yum:
+        name: logstash
+        state: absent 
+      become: true
+
+    - name: Install logstash
+      yum:
+        name: logstash
+        state: present 
+      become: true
+
+    - name: Get systemctl daemon-reload
+      raw: /bin/systemctl daemon-reload
+      become: true
+
+    - name: enable logstash.service 
+      raw: /bin/systemctl enable logstash.service
+      become: true
+    
+    - name: start logstash.service 
+      raw: /bin/systemctl start logstash.service
+      ignore_errors: true
+      become: true  

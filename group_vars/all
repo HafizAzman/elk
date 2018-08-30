@@ -1,0 +1,10 @@
+---
+# Kibana varibles
+KIBANA_HOST: 192.168.207.241
+ELASTICSEARCH.USERNAME: elastic
+ELASTICSEARCH.PASSWORD: changeme
+
+# Logstash
+NODE.NAME: sg1-dev-elk-01
+NODE.NAME: sg1-dev-elk-01
+
